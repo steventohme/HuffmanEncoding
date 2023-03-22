@@ -26,8 +26,19 @@ class PriorityQueue:
 def recreate_huffman_tree(fh):
     pqueue = PriorityQueue()
     for line in fh:
-        char, frequency = line.split(':')
-        pqueue.insert(Node(char, int(frequency)))
+        #edge case if char is :, split will fail
+        if line[0] == ":":
+          char = ":"
+          frequency = line[2:]
+        else:
+          char, frequency = line.split(':')
+          
+        if char == r"\n":
+          pqueue.insert(Node("\n", int(frequency)))
+        elif char == r"\t":
+          pqueue.insert(Node("\t", int(frequency)))
+        else:  
+          pqueue.insert(Node(char, int(frequency)))
     while len(pqueue) > 1:
         left = pqueue.delete()
         right = pqueue.delete()
@@ -38,6 +49,7 @@ def fill_with_zeros(bin_string):
   while len(bin_string) < 8:
     bin_string = '0' + bin_string
   return bin_string
+
 def decode_file(tree, input_file, output_file):
   curr = tree
   while True:
