@@ -22,14 +22,17 @@ class PriorityQueue:
     def isEmpty(self):
         return len(self.queue) == 0
     def insert(self, data):
-        self.queue.append(data)
+        l, r = 0, len(self.queue) - 1
+        while l <= r:
+            m = (l + r) // 2
+            if self.queue[m].frequency > data.frequency:
+                l = m + 1
+            else:
+                r = m - 1
+        self.queue.insert(l, data)
     def delete(self):
-        min = 0
-        for i in range(len(self.queue)):
-            if self.queue[i].frequency <= self.queue[min].frequency:
-                min = i
-        item = self.queue[min]
-        del self.queue[min]
+        item = self.queue[-1]
+        del self.queue[-1]
         return item
 
 def create_frequency_file(fh, frequency_file):
