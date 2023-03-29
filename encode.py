@@ -99,7 +99,7 @@ def write_codes(code_dict):
             codes_file.write("\n")
 
 
-def write_compressed_file(code_dict, test_list,fh):
+def write_compressed_file(code_dict, test_list, fh):
 
     byte = b'\x00'
     count = 7
