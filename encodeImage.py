@@ -115,7 +115,7 @@ def write_encoded_file(code_dict, imgArray, fh):
 
 def main():
     codes_file = open("./testFiles/codesImage.txt", "w")
-    imgArray, shape = create_image_array('./testFiles/uncompressedImage.jpg')
+    imgArray, shape = create_image_array('./testFiles/uncompressedImage.tif')
     frequency_file = open('./testFiles/frequencyImage.txt', 'w')
     frequencies = create_frequency_file(imgArray, shape, frequency_file)
     frequency_file.close()
