@@ -120,11 +120,3 @@ tree = create_huffman_tree(frequencies)
 code_dict = create_code_dict(tree)
 write_codes(code_dict)
 write_encoded_file(code_dict, imgArray, open('encoded1.bin', 'wb'))
-
-# TODO, image encoding works, however it is not very space efficent (only half as efficient as jpeg). 
-# we can make it more space efficient by having unique values, with very long codes, round to any value that is +- 10 of each rgb
-# and has a higher frequency than the average. This will make the code more efficient, but will also make the final image less accurate
-# https://www.geeksforgeeks.org/python-find-the-closest-key-in-dictionary/
-# find the most frequennt codes, split the all frequency dictionary and create new codes
-#
-# mane fuh dis, allow user to apply compression, 100% encodes pixel for pixel, 50% encodes every other 
