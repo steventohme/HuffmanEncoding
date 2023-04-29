@@ -1,6 +1,4 @@
-import re
 import collections
-import bisect
 import numpy as np
 from PIL import Image
 codes_file = open("codes1.txt", "w")
@@ -114,7 +112,7 @@ def write_codes(code_dict):
         codes_file.write("\n")
 
   
-imgArray, shape = create_image_array('toronto.jpg')
+imgArray, shape = create_image_array('DSC05152.tif')
 frequency_file = open('frequency1.txt', 'w')
 frequencies = create_frequency_file(imgArray, frequency_file)
 frequency_file.close()
