@@ -1,7 +1,8 @@
 import collections
 import numpy as np
 from PIL import Image
-codes_file = open("codes1.txt", "w")
+
+codes_file = open("./testFiles/codesImage.txt", "w")
 
 class Node:
     def __init__(self, pixel, frequency, left=None, right=None):
@@ -111,12 +112,15 @@ def write_codes(code_dict):
         codes_file.write(i + ":" + str(code_dict[i][0]))
         codes_file.write("\n")
 
-  
-imgArray, shape = create_image_array('DSC05152.tif')
-frequency_file = open('frequency1.txt', 'w')
-frequencies = create_frequency_file(imgArray, frequency_file)
-frequency_file.close()
-tree = create_huffman_tree(frequencies)
-code_dict = create_code_dict(tree)
-write_codes(code_dict)
-write_encoded_file(code_dict, imgArray, open('encoded1.bin', 'wb'))
+def main():
+    imgArray, shape = create_image_array('./testFiles/UncompressedImage.tif')
+    frequency_file = open('./testFiles/frequencyImage.txt', 'w')
+    frequencies = create_frequency_file(imgArray, frequency_file)
+    frequency_file.close()
+    tree = create_huffman_tree(frequencies)
+    code_dict = create_code_dict(tree)
+    write_codes(code_dict)
+    write_encoded_file(code_dict, imgArray, open('./testFiles/encodedImage.bin', 'wb'))
+
+if __name__ == '__main__':
+    main()

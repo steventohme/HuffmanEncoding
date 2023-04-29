@@ -74,11 +74,14 @@ def save_image(img_list, shape, output):
   img_list = np.reshape(img_list, shape)
   Image.fromarray(img_list).save(output)
 
+def main():
+  fh = open("./testFiles/frequencyImage.txt", "r")
+  fp = open("./testFiles/encodedImage.bin", "rb")
 
-fh = open("frequency1.txt", "r")
-fp = open("encoded1.bin", "rb")
 
+  tree = recreate_huffman_tree(fh)
+  img_list = decode_file(tree, fp, (1920,1080,3))
+  save_image(img_list, (1080,1920,3), './testFiles/decodedImage.png')
 
-tree = recreate_huffman_tree(fh)
-img_list = decode_file(tree, fp, (1920,1080,3))
-save_image(img_list, (1080,1920,3), 'uncompressed.png')
+if __name__ == '__main__':
+  main()
