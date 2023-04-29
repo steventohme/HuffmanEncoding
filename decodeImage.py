@@ -31,27 +31,32 @@ class PriorityQueue:
 
 def recreate_huffman_tree(fh):
     pqueue = PriorityQueue()
+    shapeFlag = True
     for line in fh:
-        pixel, frequency = line.split(':')
-        pqueue.insert(Node(pixel, int(frequency)))
+        if shapeFlag:
+          shape = tuple(map(int, line.strip().split(', ')))
+          shapeFlag = False
+        else:
+          pixel, frequency = line.split(':')
+          pqueue.insert(Node(pixel, int(frequency)))
     while len(pqueue) > 1:
         left = pqueue.delete()
         right = pqueue.delete()
         pqueue.insert(Node(-1, left.frequency + right.frequency, left, right))
-    return pqueue.delete()
+    return pqueue.delete(), shape
   
 def fill_with_zeros(bin_string):
   while len(bin_string) < 8:
     bin_string = '0' + bin_string
   return bin_string
 
-def decode_file(tree, input_file, shape):
+def decode_file(tree, shape, input_file):
   img_list = []
   curr = tree
   count = 0
   while True:
     if count == shape[0] * shape[1]:
-      break
+       break
     byte = input_file.read(1)
     byte_bin = bin(int.from_bytes(byte, 'big'))
     bin_string = fill_with_zeros(byte_bin[2:])
@@ -66,7 +71,7 @@ def decode_file(tree, input_file, shape):
         curr_list = list(map(int,curr.pixel.split(',')))
         img_list.append(curr_list)
         curr = tree
-  return img_list
+  return img_list,
   
 def save_image(img_list, shape, output):
   img_list = np.array(img_list)
@@ -79,9 +84,9 @@ def main():
   fp = open("./testFiles/encodedImage.bin", "rb")
 
 
-  tree = recreate_huffman_tree(fh)
-  img_list = decode_file(tree, fp, (1920,1080,3))
-  save_image(img_list, (1080,1920,3), './testFiles/decodedImage.png')
+  tree, shape = recreate_huffman_tree(fh)
+  img_list = decode_file(tree, shape, fp)
+  save_image(img_list, shape, './testFiles/decodedImage.png')
 
 if __name__ == '__main__':
   main()

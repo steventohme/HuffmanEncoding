@@ -2,7 +2,6 @@ import collections
 import numpy as np
 from PIL import Image
 
-codes_file = open("./testFiles/codesImage.txt", "w")
 
 class Node:
     def __init__(self, pixel, frequency, left=None, right=None):
@@ -42,8 +41,10 @@ def create_image_array(filename):
         imgArray[i] = row   
     return imgArray, shape
 
-def create_frequency_file(imgArray, frequency_file):
+def create_frequency_file(imgArray, shape, frequency_file):
     frequencies = collections.OrderedDict()
+    frequency_file.write(f"{shape[0]}, {shape[1]}, {shape[2]}")
+    frequency_file.write("\n")
     for row in imgArray:
         for pixel in row:
             if pixel not in frequencies:
@@ -88,6 +89,13 @@ def create_code_dict(tree, code = ""):
         create_code_dict(tree.right, code + "1")
     return code_dict
 
+def write_codes(code_dict, codes_file):
+    #sort the code dictionary so that the most frequent characters are at the top
+    code_dict = dict(sorted(code_dict.items(), key=lambda x: x[1][1],reverse=True))
+    for i in code_dict: 
+        codes_file.write(i + ":" + str(code_dict[i][0]))
+        codes_file.write("\n")
+
 def write_encoded_file(code_dict, imgArray, fh):
     byte = b'\x00'
     count = 7
@@ -105,21 +113,15 @@ def write_encoded_file(code_dict, imgArray, fh):
                     count = 7
                     byte = b'\x00'
 
-def write_codes(code_dict):
-    #sort the code dictionary so that the most frequent characters are at the top
-    code_dict = dict(sorted(code_dict.items(), key=lambda x: x[1][1],reverse=True))
-    for i in code_dict: 
-        codes_file.write(i + ":" + str(code_dict[i][0]))
-        codes_file.write("\n")
-
 def main():
-    imgArray, shape = create_image_array('./testFiles/UncompressedImage.tif')
+    codes_file = open("./testFiles/codesImage.txt", "w")
+    imgArray, shape = create_image_array('./testFiles/uncompressedImage.jpg')
     frequency_file = open('./testFiles/frequencyImage.txt', 'w')
-    frequencies = create_frequency_file(imgArray, frequency_file)
+    frequencies = create_frequency_file(imgArray, shape, frequency_file)
     frequency_file.close()
     tree = create_huffman_tree(frequencies)
     code_dict = create_code_dict(tree)
-    write_codes(code_dict)
+    write_codes(code_dict, codes_file)
     write_encoded_file(code_dict, imgArray, open('./testFiles/encodedImage.bin', 'wb'))
 
 if __name__ == '__main__':
